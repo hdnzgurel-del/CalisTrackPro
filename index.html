@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0b0f17" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="CalisTrack Pro" />
+  <title>CalisTrack Pro — Çevrimdışı Calisthenics & Fitness</title>
+  <link id="manifest-link" rel="manifest" href="" />
+  <link id="apple-icon" rel="apple-touch-icon" href="" />
+
+  <style>
+    :root {
+      --bg: #0b0f17;
+      --bg-elevated: #121826;
+      --card: #161e2e;
+      --card-border: #243047;
+      --primary: #10b981;
+      --primary-dark: #059669;
+      --primary-glow: rgba(16, 185, 129, 0.22);
+      --accent: #38bdf8;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --nav-height: 70px;
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: calc(var(--nav-height) + 24px);
+      overflow-x: hidden;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(11, 15, 23, 0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #06281e;
+      font-size: 16px;
+    }
+
+    .brand h1 {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .badge-offline {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.14);
+      color: var(--primary);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    main {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .tab-section {
+      display: none;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    .tab-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .muted {
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    input, select {
+      width: 100%;
+      background: var(--bg-elevated);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      padding: 11px 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--primary);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: none;
+      border-radius: 12px;
+      padding: 11px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.1s, opacity 0.2s, background 0.2s;
+      color: var(--text);
+      background: var(--bg-elevated);
+      border: 1px solid var(--card-border);
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #042117;
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-accent {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+    }
+
+    .btn-sm {
+      padding: 7px 11px;
+      font-size: 12px;
+      border-radius: 10px;
+    }
+
+    .btn-full {
+      width: 100%;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .step-display {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .step-number {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--primary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      background: var(--bg-elevated);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    .cam-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: #070a10;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--card-border);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cam-wrapper video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scaleX(-1);
+    }
+
+    .cam-overlay {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      display: flex;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+
+    .cam-pill {
+      background: rgba(11, 15, 23, 0.82);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      border: 1px solid var(--card-border);
+    }
+
+    .cam-placeholder {
+      text-align: center;
+      color: var(--text-muted);
+      padding: 20px;
+      font-size: 13px;
+    }
+
+    .log-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      background: var(--bg-elevated);
+      border-radius: 12px;
+      margin-bottom: 8px;
+      border: 1px solid rgba(36, 48, 71, 0.6);
+    }
+
+    .log-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .log-title {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .log-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .timer-circle {
+      width: 210px;
+      height: 210px;
+      border-radius: 50%;
+      margin: 16px auto 20px;
+      border: 4px solid var(--card-border);
+      background: radial-gradient(circle at center, rgba(16, 185, 129, 0.08), transparent 70%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .timer-circle.running {
+      border-color: var(--primary);
+      box-shadow: 0 0 28px var(--primary-glow);
+    }
+
+    .timer-time {
+      font-size: 38px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -1px;
+    }
+
+    .timer-ms {
+      font-size: 16px;
+      color: var(--primary);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .coach-bubble {
+      background: var(--bg-elevated);
+      border-left: 3px solid var(--primary);
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.55;
+      margin-bottom: 12px;
+    }
+
+    .chip-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .chip {
+      background: var(--bg-elevated);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .chip:active {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .stat-box {
+      background: var(--bg-elevated);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+      border: 1px solid rgba(36, 48, 71, 0.6);
+    }
+
+    .stat-val {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .stat-lbl {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    nav.bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: var(--nav-height);
+      background: rgba(18, 24, 38, 0.95);
+      backdrop-filter: blur(14px);
+      border-top: 1px solid var(--card-border);
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      z-index: 50;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .nav-btn svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .nav-btn.active {
+      color: var(--primary);
+    }
+
+    #toast {
+      position: fixed;
+      top: 72px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: var(--primary);
+      color: #042117;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s ease;
+      z-index: 100;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-logo">CT</div>
+      <h1>CalisTrack <span>Pro</span></h1>
+    </div>
+    <span class="badge-offline" id="net-status">● Çevrimdışı Hazır</span>
+  </header>
+
+  <div id="toast">Kaydedildi!</div>
+
+  <main>
+    <!-- 1. ANTRENMAN SEKMESİ -->
+    <section id="tab-workout" class="tab-section active">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">👟 Günlük Adım Sayar</div>
+          <button class="btn btn-sm btn-accent" id="btn-sensor" onclick="toggleStepSensor()">Sensörü Başlat</button>
+        </div>
+
+        <div class="step-display">
+          <div>
+            <span class="step-number" id="step-count">0</span>
+            <span class="muted">/ <span id="step-goal-text">8000</span> adım</span>
+          </div>
+          <span class="muted" id="step-percent">%0</span>
+        </div>
+
+        <div class="progress-track">
+          <div class="progress-fill" id="step-progress"></div>
+        </div>
+
+        <div class="grid-3" style="margin-bottom: 10px;">
+          <button class="btn btn-sm" onclick="addSteps(250)">+250 Adım</button>
+          <button class="btn btn-sm" onclick="addSteps(1000)">+1000 Adım</button>
+          <button class="btn btn-sm" onclick="changeStepGoal()">Hedef Değiştir</button>
+        </div>
+        <div class="muted" id="sensor-info">İvme sensörü (DeviceMotion) kapalı. Telefon cebinizdeyken sensörü açabilirsiniz.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">💪 Set & Hareket Kaydet</div>
+        </div>
+
+        <div style="margin-bottom: 10px;">
+          <label class="muted" style="display:block; margin-bottom:4px;">Hareket Seçimi</label>
+          <select id="exercise-select">
+            <option value="Chest-to-Bar Barfiks">Chest-to-Bar Barfiks</option>
+            <option value="Barfiks (Pull-up)">Barfiks (Pull-up)</option>
+            <option value="Şınav (Push-up)">Şınav (Push-up)</option>
+            <option value="Yavaş Negatif Şınav">Yavaş Negatif Şınav</option>
+            <option value="Derin Squat">Derin Squat</option>
+            <option value="Plank (sn)">Plank (sn)</option>
+            <option value="Dead Hang (sn)">Dead Hang (sn)</option>
+            <option value="Amut Hazırlık / Duvar Duruşu (sn)">Amut Hazırlık / Duvar Duruşu (sn)</option>
+            <option value="Dips">Dips</option>
+            <option value="L-Sit (sn)">L-Sit (sn)</option>
+          </select>
+        </div>
+
+        <div class="grid-2" style="margin-bottom: 10px;">
+          <div>
+            <label class="muted" style="display:block; margin-bottom:4px;">Tekrar veya Süre (sn)</label>
+            <input type="number" id="exercise-val" placeholder="Örn: 10" min="1" />
+          </div>
+          <div>
+            <label class="muted" style="display:block; margin-bottom:4px;">Birim</label>
+            <select id="exercise-unit">
+              <option value="tekrar">Tekrar</option>
+              <option value="saniye">Saniye</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-full" onclick="logWorkout()">+ Kayda Ekle</button>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📷 Kamera Tekrar Sayacı (Sesli)</div>
+          <button class="btn btn-sm btn-accent" id="btn-cam" onclick="toggleCamera()">Kamerayı Aç</button>
+        </div>
+
+        <div class="cam-wrapper">
+          <video id="cam-video" autoplay playsinline muted style="display:none;"></video>
+          <canvas id="cam-canvas" width="160" height="120" style="display:none;"></canvas>
+          <div class="cam-placeholder" id="cam-placeholder">
+            Kamerayı açtığınızda hareket değişimine göre otomatik tekrar sayar ve Türkçe sesli okur.
+          </div>
+          <div class="cam-overlay">
+            <span class="cam-pill">Sayaç: <strong id="cam-rep-count" style="color:var(--primary)">0</strong></span>
+            <span class="cam-pill" id="cam-motion-state">Hazır</span>
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <button class="btn btn-sm" onclick="incrementCamRep(true)">+1 Test Tekrar</button>
+          <button class="btn btn-sm btn-primary" onclick="saveCamReps()">Kayda Aktar</button>
+          <button class="btn btn-sm btn-danger" onclick="resetCamReps()">Sıfırla</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📋 Antrenman Günlüğü</div>
+          <span class="muted" id="log-count-badge">0 kayıt</span>
+        </div>
+        <div id="workout-log-list">
+          <div class="muted">Henüz antrenman kaydı yok.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. SPOR YAP (ANTRENMAN ÜRETİCİ) SEKMESİ -->
+    <section id="tab-generator" class="tab-section">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">⚡ Akıllı Program Üretici</div>
+        </div>
+
+        <div style="margin-bottom: 10px;">
+          <label class="muted" style="display:block; margin-bottom:4px;">Antrenman Odağı</label>
+          <select id="gen-focus">
+            <option value="full">Full Body Calisthenics</option>
+            <option value="pushpull">Barfiks + Şınav Odaklı (Üst Vücut)</option>
+            <option value="handstand">Amut & Core Hazırlık</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom: 14px;">
+          <label class="muted" style="display:block; margin-bottom:4px;">Süre Seçimi</label>
+          <div class="grid-3">
+            <button type="button" class="btn btn-sm gen-dur-btn btn-primary" data-min="10" onclick="selectDuration(10, this)">10 Dk</button>
+            <button type="button" class="btn btn-sm gen-dur-btn" data-min="15" onclick="selectDuration(15, this)">15 Dk</button>
+            <button type="button" class="btn btn-sm gen-dur-btn" data-min="25" onclick="selectDuration(25, this)">25 Dk</button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-full" onclick="generateWorkoutPlan()">Programı Oluştur</button>
+      </div>
+
+      <div class="card" id="generated-plan-card" style="display:none;">
+        <div class="card-header">
+          <div class="card-title" id="plan-title">Oluşturulan Plan</div>
+          <span class="muted" id="plan-subtitle"></span>
+        </div>
+        <div id="plan-items-list" style="margin-bottom: 14px;"></div>
+        <button class="btn btn-accent btn-full" onclick="transferPlanToLog()">Tüm Planı Antrenman Günlüğüne Aktar</button>
+      </div>
+    </section>
+
+    <!-- 3. NEFES SEKMESİ -->
+    <section id="tab-breath" class="tab-section">
+      <div class="card" style="text-align: center;">
+        <div class="card-header">
+          <div class="card-title">🫁 Statik Nefes Tutma Kronometresi</div>
+          <span class="badge-offline">Rekor: <strong id="breath-record-display">00:00.0</strong></span>
+        </div>
+
+        <p class="muted" style="text-align: left;">
+          Rahat bir pozisyona geçin, derin ama zorlamayan bir nefes alın ve sayacı başlatın. Baş dönmesi hissederseniz hemen bırakın.
+        </p>
+
+        <div class="timer-circle" id="breath-circle">
+          <div class="timer-time" id="breath-main-time">00:00</div>
+          <div class="timer-ms" id="breath-ms-time">.00</div>
+        </div>
+
+        <div class="grid-2" style="margin-bottom: 10px;">
+          <button class="btn btn-primary" id="btn-breath-toggle" onclick="toggleBreathTimer()">Başlat</button>
+          <button class="btn" onclick="resetBreathTimer()">Sıfırla</button>
+        </div>
+
+        <button class="btn btn-accent btn-full" onclick="saveBreathRecord()">Süreyi Rekor Olarak Kaydet</button>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">⏱️ Nefes Geçmişi</div>
+        </div>
+        <div id="breath-history-list">
+          <div class="muted">Henüz kaydedilmiş nefes süresi yok.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. KOÇ AI SEKMESİ (SAMİMİ SOHBETLİ) -->
+    <section id="tab-coach" class="tab-section">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🤝 Koç AI (Samimi & Çevrimdışı)</div>
+          <button class="btn btn-sm btn-accent" onclick="speakCoachResponse()">🔊 Sesli Dinle</button>
+        </div>
+
+        <div class="coach-bubble" id="coach-output">
+          Selam! Bugün nasılsın? Verilerine bakıp sana özel bir şeyler söyleyebilirim ya da aşağıdan bir konu seçip sohbete başlayabiliriz.
+        </div>
+
+        <div class="grid-2" style="gap: 8px; margin-bottom: 10px;">
+          <input type="text" id="coach-input" placeholder="Kafandakini yaz... (örn: bugün yorgunum, barfiks)" onkeydown="if(event.key==='Enter') sendCoachChat()" />
+          <button class="btn btn-primary" onclick="sendCoachChat()">Gönder</button>
+        </div>
+
+        <div style="margin-top: 8px;">
+          <span class="muted">Hızlı Sohbet Konuları:</span>
+          <div class="chip-group">
+            <button class="chip" onclick="runCoachAnalysis('status')">Bugünkü durumumu yorumla</button>
+            <button class="chip" onclick="runCoachAnalysis('pullup')">Barfiks taktikleri</button>
+            <button class="chip" onclick="runCoachAnalysis('handstand')">Amut & core tüyoları</button>
+            <button class="chip" onclick="runCoachAnalysis('tired')">Bugün biraz yorgunum</button>
+            <button class="chip" onclick="runCoachAnalysis('motivation')">Bana biraz gaz ver</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. İSTATİSTİK SEKMESİ -->
+    <section id="tab-stats" class="tab-section">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📊 Genel Performans Özeti</div>
+        </div>
+
+        <div class="grid-2" style="margin-bottom: 10px;">
+          <div class="stat-box">
+            <div class="stat-val" id="stat-total-logs">0</div>
+            <div class="stat-lbl">Toplam Set Kaydı</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="stat-total-reps">0</div>
+            <div class="stat-lbl">Toplam Tekrar / Sn</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="stat-steps">0</div>
+            <div class="stat-lbl">Bugünkü Adım</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="stat-breath-best">00:00</div>
+            <div class="stat-lbl">En İyi Nefes Tutma</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📲 Uygulama & Veri Yönetimi</div>
+        </div>
+        <p class="muted" style="margin-bottom: 12px;">
+          Tüm verileriniz yalnızca bu cihazdaki tarayıcı belleğinde (localStorage) tutulur. Hiçbir sunucuya veri gönderilmez.
+        </p>
+        <button class="btn btn-accent btn-full" id="btn-install-pwa" style="display:none; margin-bottom: 10px;" onclick="installPWA()">Ana Ekrana Uygulama Olarak Kur</button>
+        <button class="btn btn-danger btn-full" onclick="resetAllData()">Tüm Verileri Sıfırla</button>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn active" onclick="switchTab('workout', this)">
+      <svg viewBox="0 0 24 24"><path d="M6.5 6.5h11M6.5 17.5h11M4 10v4M20 10v4M7 8v8M17 8v8"/></svg>
+      <span>Antrenman</span>
+    </button>
+    <button class="nav-btn" onclick="switchTab('generator', this)">
+      <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      <span>Spor Yap</span>
+    </button>
+    <button class="nav-btn" onclick="switchTab('breath', this)">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+      <span>Nefes</span>
+    </button>
+    <button class="nav-btn" onclick="switchTab('coach', this)">
+      <svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.5-1.3 4.7-3.2 6l-.8 3H9l-.8-3A7 7 0 0 1 12 2z"/><line x1="9" y1="21" x2="15" y2="21"/></svg>
+      <span>Koç AI</span>
+    </button>
+    <button class="nav-btn" onclick="switchTab('stats', this)">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span>İstatistik</span>
+    </button>
+  </nav>
+
+  <script>
+    const STORAGE_KEY = "calistrack_pro_data_v1";
+    const todayStr = new Date().toISOString().slice(0, 10);
+
+    let appData = {
+      date: todayStr,
+      steps: 0,
+      stepGoal: 8000,
+      logs: [],
+      breathBestMs: 0,
+      breathHistory: []
+    };
+
+    function loadData() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          appData = { ...appData, ...parsed };
+          if (appData.date !== todayStr) {
+            appData.date = todayStr;
+            appData.steps = 0;
+            saveData();
+          }
+        }
+      } catch (e) {
+        console.error("Veri okuma hatası:", e);
+      }
+    }
+
+    function saveData() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+      renderAll();
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 2200);
+    }
+
+    function switchTab(tabName, btnEl) {
+      document.querySelectorAll(".tab-section").forEach(s => s.classList.remove("active"));
+      document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+      document.getElementById("tab-" + tabName).classList.add("active");
+      btnEl.classList.add("active");
+
+      if (tabName === "coach") runCoachAnalysis("status");
+      if (tabName === "stats") updateStatsUI();
+    }
+
+    let sensorActive = false;
+    let lastAccelMag = 0;
+    let lastStepTime = 0;
+
+    function addSteps(amount) {
+      appData.steps += amount;
+      saveData();
+      showToast(`+${amount} adım eklendi`);
+    }
+
+    function changeStepGoal() {
+      const val = prompt("Yeni günlük adım hedefiniz:", appData.stepGoal);
+      const num = parseInt(val, 10);
+      if (num && num >= 500) {
+        appData.stepGoal = num;
+        saveData();
+        showToast("Adım hedefi güncellendi");
+      }
+    }
+
+    function handleMotion(event) {
+      const acc = event.accelerationIncludingGravity || event.acceleration;
+      if (!acc) return;
+      const mag = Math.sqrt((acc.x || 0)**2 + (acc.y || 0)**2 + (acc.z || 0)**2);
+      const delta = Math.abs(mag - lastAccelMag);
+      const now = Date.now();
+
+      if (delta > 3.2 && now - lastStepTime > 330) {
+        appData.steps += 1;
+        lastStepTime = now;
+        updateStepUI();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+      }
+      lastAccelMag = mag;
+    }
+
+    async function toggleStepSensor() {
+      const btn = document.getElementById("btn-sensor");
+      const info = document.getElementById("sensor-info");
+
+      if (sensorActive) {
+        window.removeEventListener("devicemotion", handleMotion);
+        sensorActive = false;
+        btn.textContent = "Sensörü Başlat";
+        info.textContent = "İvme sensörü durduruldu.";
+        return;
+      }
+
+      if (typeof DeviceMotionEvent !== "undefined" && typeof DeviceMotionEvent.requestPermission === "function") {
+        try {
+          const perm = await DeviceMotionEvent.requestPermission();
+          if (perm !== "granted") {
+            alert("Adım sayar için hareket sensörü izni verilmedi.");
+            return;
+          }
+        } catch (err) {
+          alert("Sensör izni alınamadı: " + err.message);
+          return;
+        }
+      }
+
+      window.addEventListener("devicemotion", handleMotion);
+      sensorActive = true;
+      btn.textContent = "Sensörü Durdur";
+      info.textContent = "Sensör aktif: Yürürken adımlarınız otomatik sayılıyor.";
+      showToast("Adım sensörü aktif!");
+    }
+
+    function updateStepUI() {
+      document.getElementById("step-count").textContent = appData.steps.toLocaleString("tr-TR");
+      document.getElementById("step-goal-text").textContent = appData.stepGoal.toLocaleString("tr-TR");
+      const pct = Math.min(100, Math.round((appData.steps / appData.stepGoal) * 100));
+      document.getElementById("step-percent").textContent = `%${pct}`;
+      document.getElementById("step-progress").style.width = `${pct}%`;
+    }
+
+    function logWorkout() {
+      const name = document.getElementById("exercise-select").value;
+      const val = parseInt(document.getElementById("exercise-val").value, 10);
+      const unit = document.getElementById("exercise-unit").value;
+
+      if (!val || val <= 0) {
+        showToast("Lütfen geçerli bir tekrar/süre girin");
+        return;
+      }
+
+      const now = new Date();
+      const timeStr = now.toTimeString().slice(0, 5);
+
+      appData.logs.unshift({
+        id: Date.now(),
+        name,
+        val,
+        unit,
+        time: timeStr,
+        date: todayStr
+      });
+
+      document.getElementById("exercise-val").value = "";
+      saveData();
+      showToast(`${name} kaydedildi!`);
+    }
+
+    function deleteLog(id) {
+      appData.logs = appData.logs.filter(item => item.id !== id);
+      saveData();
+    }
+
+    function renderLogs() {
+      const list = document.getElementById("workout-log-list");
+      document.getElementById("log-count-badge").textContent = `${appData.logs.length} kayıt`;
+
+      if (appData.logs.length === 0) {
+        list.innerHTML = `<div class="muted">Henüz antrenman kaydı yok.</div>`;
+        return;
+      }
+
+      list.innerHTML = appData.logs.slice(0, 20).map(item => `
+        <div class="log-item">
+          <div>
+            <div class="log-title">${item.name}</div>
+            <div class="log-meta">${item.val} ${item.unit} • Saat ${item.time} (${item.date})</div>
+          </div>
+          <button class="btn btn-sm btn-danger" onclick="deleteLog(${item.id})">Sil</button>
+        </div>
+      `).join("");
+    }
+
+    let camStream = null;
+    let camInterval = null;
+    let prevFrameData = null;
+    let camReps = 0;
+    let repPhase = "idle";
+    let lastRepTimestamp = 0;
+
+    function speakTurkish(text) {
+      if (!("speechSynthesis" in window)) return;
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "tr-TR";
+      utter.rate = 1.05;
+      window.speechSynthesis.speak(utter);
+    }
+
+    function incrementCamRep(speak = true) {
+      camReps += 1;
+      document.getElementById("cam-rep-count").textContent = camReps;
+      if (speak) speakTurkish(String(camReps));
+    }
+
+    function resetCamReps() {
+      camReps = 0;
+      document.getElementById("cam-rep-count").textContent = "0";
+      showToast("Kamera sayacı sıfırlandı");
+    }
+
+    function saveCamReps() {
+      if (camReps <= 0) {
+        showToast("Aktarılacak tekrar yok");
+        return;
+      }
+      const name = document.getElementById("exercise-select").value;
+      const timeStr = new Date().toTimeString().slice(0, 5);
+      appData.logs.unshift({
+        id: Date.now(),
+        name,
+        val: camReps,
+        unit: "tekrar",
+        time: timeStr,
+        date: todayStr
+      });
+      saveData();
+      showToast(`${camReps} tekrar ${name} olarak eklendi!`);
+      resetCamReps();
+    }
+
+    async function toggleCamera() {
+      const video = document.getElementById("cam-video");
+      const placeholder = document.getElementById("cam-placeholder");
+      const btn = document.getElementById("btn-cam");
+      const stateBadge = document.getElementById("cam-motion-state");
+
+      if (camStream) {
+        clearInterval(camInterval);
+        camStream.getTracks().forEach(t => t.stop());
+        camStream = null;
+        prevFrameData = null;
+        video.style.display = "none";
+        placeholder.style.display = "block";
+        btn.textContent = "Kamerayı Aç";
+        stateBadge.textContent = "Kapalı";
+        return;
+      }
+
+      try {
+        camStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "user", width: 320, height: 240 },
+          audio: false
+        });
+        video.srcObject = camStream;
+        video.style.display = "block";
+        placeholder.style.display = "none";
+        btn.textContent = "Kamerayı Kapat";
+        stateBadge.textContent = "İzleniyor";
+
+        const canvas = document.getElementById("cam-canvas");
+        const ctx = canvas.getContext("2d", { willReadFrequently: true });
+
+        camInterval = setInterval(() => {
+          if (video.readyState !== video.HAVE_ENOUGH_DATA) return;
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          const frame = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+
+          if (prevFrameData) {
+            let diffSum = 0;
+            for (let i = 0; i < frame.length; i += 16) {
+              diffSum += Math.abs(frame[i] - prevFrameData[i]);
+            }
+            const avgDiff = diffSum / (frame.length / 16);
+            const now = Date.now();
+
+            if (avgDiff > 24 && repPhase === "idle" && now - lastRepTimestamp > 1200) {
+              repPhase = "moving";
+              stateBadge.textContent = "Hareket...";
+            } else if (avgDiff < 12 && repPhase === "moving") {
+              repPhase = "idle";
+              lastRepTimestamp = now;
+              stateBadge.textContent = "Tekrar!";
+              incrementCamRep(true);
+            }
+          }
+          prevFrameData = new Uint8ClampedArray(frame);
+        }, 120);
+
+      } catch (err) {
+        alert("Kameraya erişilemedi: " + err.message);
+      }
+    }
+
+    let selectedDuration = 10;
+    let currentGeneratedPlan = [];
+
+    function selectDuration(min, btn) {
+      selectedDuration = min;
+      document.querySelectorAll(".gen-dur-btn").forEach(b => b.classList.remove("btn-primary"));
+      btn.classList.add("btn-primary");
+    }
+
+    function generateWorkoutPlan() {
+      const focus = document.getElementById("gen-focus").value;
+      const mult = selectedDuration === 10 ? 1 : selectedDuration === 15 ? 1.5 : 2.2;
+
+      const templates = {
+        full: [
+          { name: "Chest-to-Bar Barfiks", base: 6, unit: "tekrar", sets: 3 },
+          { name: "Şınav (Push-up)", base: 15, unit: "tekrar", sets: 3 },
+          { name: "Derin Squat", base: 20, unit: "tekrar", sets: 3 },
+          { name: "Plank (sn)", base: 45, unit: "saniye", sets: 2 }
+        ],
+        pushpull: [
+          { name: "Chest-to-Bar Barfiks", base: 6, unit: "tekrar", sets: 4 },
+          { name: "Barfiks (Pull-up)", base: 8, unit: "tekrar", sets: 3 },
+          { name: "Yavaş Negatif Şınav", base: 12, unit: "tekrar", sets: 4 },
+          { name: "Dead Hang (sn)", base: 30, unit: "saniye", sets: 2 }
+        ],
+        handstand: [
+          { name: "Amut Hazırlık / Duvar Duruşu (sn)", base: 25, unit: "saniye", sets: 4 },
+          { name: "Plank (sn)", base: 50, unit: "saniye", sets: 3 },
+          { name: "L-Sit (sn)", base: 15, unit: "saniye", sets: 3 },
+          { name: "Yavaş Negatif Şınav", base: 10, unit: "tekrar", sets: 3 }
+        ]
+      };
+
+      const rawList = templates[focus];
+      currentGeneratedPlan = rawList.map(item => ({
+        name: item.name,
+        sets: Math.max(2, Math.round(item.sets * (selectedDuration === 25 ? 1.3 : 1))),
+        val: Math.round(item.base * mult),
+        unit: item.unit
+      }));
+
+      const card = document.getElementById("generated-plan-card");
+      const listEl = document.getElementById("plan-items-list");
+      document.getElementById("plan-subtitle").textContent = `${selectedDuration} Dakikalık Plan`;
+
+      listEl.innerHTML = currentGeneratedPlan.map(p => `
+        <div class="log-item">
+          <div>
+            <div class="log-title">${p.name}</div>
+            <div class="log-meta">${p.sets} Set × ${p.val} ${p.unit}</div>
+          </div>
+          <span class="badge-offline">Hazır</span>
+        </div>
+      `).join("");
+
+      card.style.display = "block";
+      showToast("Antrenman planı oluşturuldu!");
+    }
+
+    function transferPlanToLog() {
+      if (currentGeneratedPlan.length === 0) return;
+      const timeStr = new Date().toTimeString().slice(0, 5);
+
+      currentGeneratedPlan.forEach((p, idx) => {
+        appData.logs.unshift({
+          id: Date.now() + idx,
+          name: `${p.name} (${p.sets} Set)`,
+          val: p.sets * p.val,
+          unit: p.unit,
+          time: timeStr,
+          date: todayStr
+        });
+      });
+
+      saveData();
+      showToast("Tüm plan günlüğe aktarıldı!");
+    }
+
+    let breathRunning = false;
+    let breathStartTime = 0;
+    let breathElapsed = 0;
+    let breathRaf = null;
+
+    function formatMs(ms) {
+      const totalSec = Math.floor(ms / 1000);
+      const mins = String(Math.floor(totalSec / 60)).padStart(2, "0");
+      const secs = String(totalSec % 60).padStart(2, "0");
+      const centis = String(Math.floor((ms % 1000) / 10)).padStart(2, "0");
+      return { main: `${mins}:${secs}`, sub: `.${centis}`, short: `${mins}:${secs}.${centis[0]}` };
+    }
+
+    function updateBreathDisplay() {
+      const now = breathRunning ? (Date.now() - breathStartTime + breathElapsed) : breathElapsed;
+      const f = formatMs(now);
+      document.getElementById("breath-main-time").textContent = f.main;
+      document.getElementById("breath-ms-time").textContent = f.sub;
+      if (breathRunning) {
+        breathRaf = requestAnimationFrame(updateBreathDisplay);
+      }
+    }
+
+    function toggleBreathTimer() {
+      const btn = document.getElementById("btn-breath-toggle");
+      const circle = document.getElementById("breath-circle");
+
+      if (!breathRunning) {
+        breathRunning = true;
+        breathStartTime = Date.now();
+        btn.textContent = "Durdur";
+        btn.classList.remove("btn-primary");
+        btn.classList.add("btn-danger");
+        circle.classList.add("running");
+        updateBreathDisplay();
+      } else {
+        breathRunning = false;
+        breathElapsed += Date.now() - breathStartTime;
+        cancelAnimationFrame(breathRaf);
+        btn.textContent = "Devam Et";
+        btn.classList.remove("btn-danger");
+        btn.classList.add("btn-primary");
+        circle.classList.remove("running");
+        updateBreathDisplay();
+      }
+    }
+
+    function resetBreathTimer() {
+      breathRunning = false;
+      breathElapsed = 0;
+      cancelAnimationFrame(breathRaf);
+      const btn = document.getElementById("btn-breath-toggle");
+      btn.textContent = "Başlat";
+      btn.classList.remove("btn-danger");
+      btn.classList.add("btn-primary");
+      document.getElementById("breath-circle").classList.remove("running");
+      updateBreathDisplay();
+    }
+
+    function saveBreathRecord() {
+      const currentMs = breathRunning ? (Date.now() - breathStartTime + breathElapsed) : breathElapsed;
+      if (currentMs < 2000) {
+        showToast("En az 2 saniyelik bir süre kaydedin");
+        return;
+      }
+
+      const f = formatMs(currentMs);
+      appData.breathHistory.unshift({
+        id: Date.now(),
+        ms: currentMs,
+        label: f.short,
+        date: todayStr
+      });
+
+      if (currentMs > appData.breathBestMs) {
+        appData.breathBestMs = currentMs;
+        showToast(`Yeni Nefes Rekoru: ${f.short}!`);
+      } else {
+        showToast("Nefes süresi kaydedildi");
+      }
+
+      saveData();
+    }
+
+    function renderBreathHistory() {
+      const bestF = formatMs(appData.breathBestMs);
+      document.getElementById("breath-record-display").textContent = bestF.short;
+
+      const list = document.getElementById("breath-history-list");
+      if (appData.breathHistory.length === 0) {
+        list.innerHTML = `<div class="muted">Henüz kaydedilmiş nefes süresi yok.</div>`;
+        return;
+      }
+
+      list.innerHTML = appData.breathHistory.slice(0, 10).map(item => `
+        <div class="log-item">
+          <div class="log-title">${item.label}</div>
+          <div class="log-meta">${item.date}</div>
+        </div>
+      `).join("");
+    }
+
+    /* ========================
+       4. YEREL KOÇ AI (SAMİMİ SOHBET MOTORU)
+       ======================== */
+    let lastCoachMessage = "";
+
+    function pickRandom(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function sendCoachChat() {
+      const inputEl = document.getElementById("coach-input");
+      const rawText = inputEl.value.trim();
+      if (!rawText) {
+        runCoachAnalysis("status");
+        return;
+      }
+      const q = rawText.toLowerCase();
+      inputEl.value = "";
+
+      if (q.includes("yorgun") || q.includes("ağrı") || q.includes("uyku") || q.includes("dinlen")) {
+        runCoachAnalysis("tired");
+      } else if (q.includes("barfiks") || q.includes("chest") || q.includes("çekiş") || q.includes("sırt")) {
+        runCoachAnalysis("pullup");
+      } else if (q.includes("amut") || q.includes("handstand") || q.includes("plank") || q.includes("core") || q.includes("denge")) {
+        runCoachAnalysis("handstand");
+      } else if (q.includes("adım") || q.includes("yürüyüş") || q.includes("kardiyo")) {
+        runCoachAnalysis("steps");
+      } else if (q.includes("nefes") || q.includes("rekor")) {
+        runCoachAnalysis("breath");
+      } else if (q.includes("gaz") || q.includes("motivasyon") || q.includes("moral") || q.includes("üşen")) {
+        runCoachAnalysis("motivation");
+      } else {
+        const pct = Math.round((appData.steps / appData.stepGoal) * 100);
+        const msg = `"${rawText}" dedin, anladım dostum! Şu an ${appData.steps.toLocaleString("tr-TR")} adımdayız (hedefin %${pct}'i). İstersen barfiks, amut, yorgunluk veya motivasyon yaz; sana direkt o konudan samimi ve net bir taktik vereyim.`;
+        lastCoachMessage = msg;
+        document.getElementById("coach-output").textContent = msg;
+      }
+    }
+
+    function runCoachAnalysis(topic) {
+      const pct = Math.round((appData.steps / appData.stepGoal) * 100);
+      const todayLogs = appData.logs.filter(l => l.date === todayStr);
+      const bestBreath = formatMs(appData.breathBestMs).main;
+      let msg = "";
+
+      if (topic === "status") {
+        const opener = pickRandom([
+          "Selam! Şöyle bir tablo önüne koyalım:",
+          "Bakalım bugün sahada neler dönmüş:",
+          "Kısa bir check-in yapalım:"
+        ]);
+        msg = `${opener} Bugün ${appData.steps.toLocaleString("tr-TR")} adım atmışsın (hedefin %${pct}'i) ve ${todayLogs.length} set kaydetmişsin. `;
+
+        if (pct < 35) {
+          msg += "Adım biraz geride kalmış ama sorun yok; kısa bir yürüyüşle bile hem kafayı açar hem günün ritmini toplarsın. ";
+        } else if (pct >= 100) {
+          msg += "Adım hedefini devirmişsin bile, bu istikrar gerçekten sağlam! ";
+        } else {
+          msg += "Adım temposu fena değil, gün sonuna doğru hedefin içine rahat girersin. ";
+        }
+
+        if (todayLogs.length === 0) {
+          msg += "Henüz kuvvet kaydı girmemişsin; canın isterse 'Spor Yap'tan 10 dakikalık mini bir seri patlatabilirsin.";
+        } else {
+          msg += `En iyi nefes tutman ${bestBreath}. Hem kas hem nefes tarafında işleri ciddiye alman hoşuma gidiyor.`;
+        }
+      } else if (topic === "pullup") {
+        msg = "Barfikste sayı artırmanın sırrı ego değil, temiz form ve taze enerji. İlk setlerde acele etmeden tam çekiş yap, tepede bir an durup aşağı kontrollü in. İstersen antremanın sonuna 20-30 saniyelik bir Dead Hang ekle; kavrama gücün arttıkça barfiks de rahatlar.";
+      } else if (topic === "handstand") {
+        msg = "Amut işinde sabır ve gövde bütünlüğü kraldır. Bilekleri ısıtmadan yüklenme; plank yaparken karnını ve kalçanı sıkarak tek parça gibi durmaya alış. Duvara dönerken de kontrollü ol, acele edince denge çabuk bozulur.";
+      } else if (topic === "steps") {
+        msg = `Şu an ${appData.steps.toLocaleString("tr-TR")} adım / %${pct} seviyesindesin. Calisthenics yaparken günlük yürüyüş ve adım, eklemleri yormadan kondisyonu diri tutmanın ve zihni boşaltmanın en temiz yolu.`;
+      } else if (topic === "breath") {
+        msg = `Statik nefes rekorun şu an ${bestBreath}. Nefes çalışmasında amaç kendini zorlayıp baş döndürmek değil; sakin kalıp diyaframı kontrol edebilmek. Acele etmeden adım adım koy üzerine.`;
+      } else if (topic === "tired") {
+        msg = "Bugün biraz yorgunsan kendini zorlayıp sakatlık riskine girmeye gerek yok. İstersen ağırlığı ve tempoyu düşür, sadece hafif hareket, nefes ve iyi bir uykuyla toparlan. Bir gün vites küçültmek geri gitmek değildir.";
+      } else if (topic === "motivation") {
+        msg = pickRandom([
+          "Kimse senden tek günde mucize beklemiyor; önemli olan bugün de masada/barda olman. Bir set daha, bir adım daha — alışkanlık böyle örülür!",
+          "Kafandaki gürültüyü bir kenara bırakıp sadece şu an yapacağın tek sete odaklan. Küçük ama düzenli adımlar uzun vadede kimsenin yakalayamadığı bir fark yaratır."
+        ]);
+      }
+
+      lastCoachMessage = msg;
+      document.getElementById("coach-output").textContent = msg;
+    }
+
+    function speakCoachResponse() {
+      if (!lastCoachMessage) runCoachAnalysis("status");
+      speakTurkish(lastCoachMessage);
+    }
+
+    function updateStatsUI() {
+      document.getElementById("stat-total-logs").textContent = appData.logs.length;
+      const totalVolume = appData.logs.reduce((sum, item) => sum + (Number(item.val) || 0), 0);
+      document.getElementById("stat-total-reps").textContent = totalVolume.toLocaleString("tr-TR");
+      document.getElementById("stat-steps").textContent = appData.steps.toLocaleString("tr-TR");
+      document.getElementById("stat-breath-best").textContent = formatMs(appData.breathBestMs).main;
+    }
+
+    function resetAllData() {
+      if (confirm("Tüm adım, antrenman ve nefes rekorlarınız kalıcı olarak silinecek. Emin misiniz?")) {
+        localStorage.removeItem(STORAGE_KEY);
+        appData = {
+          date: todayStr,
+          steps: 0,
+          stepGoal: 8000,
+          logs: [],
+          breathBestMs: 0,
+          breathHistory: []
+        };
+        saveData();
+        showToast("Tüm veriler sıfırlandı");
+      }
+    }
+
+    function renderAll() {
+      updateStepUI();
+      renderLogs();
+      renderBreathHistory();
+      updateStatsUI();
+    }
+
+    function setupEmbeddedPWA() {
+      const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="110" fill="#0b0f17"/><rect x="32" y="32" width="448" height="448" rx="90" fill="#10b981" fill-opacity="0.15" stroke="#10b981" stroke-width="16"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="210" fill="#10b981">CT</text></svg>`;
+      const iconUrl = "data:image/svg+xml;base64," + btoa(svgIcon);
+      document.getElementById("apple-icon").href = iconUrl;
+
+      const manifest = {
+        name: "CalisTrack Pro",
+        short_name: "CalisTrack",
+        description: "Çevrimdışı Calisthenics, Adım Sayar ve Nefes Uygulaması",
+        start_url: "./",
+        display: "standalone",
+        background_color: "#0b0f17",
+        theme_color: "#0b0f17",
+        icons: [
+          { src: iconUrl, sizes: "192x192", type: "image/svg+xml" },
+          { src: iconUrl, sizes: "512x512", type: "image/svg+xml" }
+        ]
+      };
+
+      const manifestBlob = new Blob([JSON.stringify(manifest)], { type: "application/manifest+json" });
+      document.getElementById("manifest-link").href = URL.createObjectURL(manifestBlob);
+
+      if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+        const swCode = `
+          const CACHE = "calistrack-pro-v1";
+          self.addEventListener("install", e => {
+            e.waitUntil(caches.open(CACHE).then(c => c.addAll(["./"])));
+            self.skipWaiting();
+          });
+          self.addEventListener("fetch", e => {
+            e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
+          });
+        `;
+        const swBlob = new Blob([swCode], { type: "application/javascript" });
+        navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
+      }
+    }
+
+    let deferredPrompt = null;
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      document.getElementById("btn-install-pwa").style.display = "block";
+    });
+
+    async function installPWA() {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      document.getElementById("btn-install-pwa").style.display = "none";
+    }
+
+    loadData();
+    setupEmbeddedPWA();
+    renderAll();
+    runCoachAnalysis("status");
+  </script>
+</body>
+</html>
